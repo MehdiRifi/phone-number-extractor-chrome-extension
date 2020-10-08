@@ -1,6 +1,15 @@
-chrome.runtime.onMessage.addListener(function (request,sender,sendResponse) {
-    let re = /\+\(?212\)?\s?[0]?[6|5]\s?[0-9{1,3}\-?|\s?]+/img
-    var matches=document.documentElement.innerText.match(re)
-    console.log(matches)
-    sendResponse(matches)
-})
+var result;
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  switch (request) {
+    // extract phone numbers
+    case "extract":
+      let re = /\+(?:\(?\d{2,4}\)?)?\s?\(?0?\)?(?:\s?-?\d{1,3}){4}/gim;
+      result = document.documentElement.innerText.match(re);
+      sendResponse(result);
+      break;
+    case "export":
+      sendResponse(result);
+      break;
+  }
+});
